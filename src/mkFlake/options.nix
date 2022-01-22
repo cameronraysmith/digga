@@ -394,6 +394,13 @@ let
     ];
   };
 
+  darwinType = with types; submoduleWith {
+    specialArgs = { inherit self inputs; };
+    modules = [
+      { options = (hostsOpt "darwin") // (hostDefaultsOpt "darwin") // importablesOpt; }
+    ];
+  };
+
   homeType = with types; submoduleWith {
     specialArgs = { inherit self inputs; };
     modules = [
@@ -471,6 +478,13 @@ in
       default = { };
       description = ''
         hosts, modules, suites, and profiles for NixOS
+      '';
+    };
+    darwin = mkOption {
+      type = pathToOr darwinType;
+      default = { };
+      description = ''
+        hosts, modules, suites, and profiles for darwin
       '';
     };
     home = mkOption {
