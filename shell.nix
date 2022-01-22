@@ -30,6 +30,9 @@ let
       nix build "$PRJ_ROOT#jobs.${pkgs.system}.mkApiReferenceNixos" \
         && cp result "$PRJ_ROOT/doc/api-reference-nixos.md" \
         && chmod 755 "$PRJ_ROOT//doc/api-reference-nixos.md"
+      nix build "$PRJ_ROOT#jobs.${pkgs.system}.mkApiReferenceDarwin" \
+        && cp result "$PRJ_ROOT/doc/api-reference-darwin.md" \
+        && chmod 755 "$PRJ_ROOT//doc/api-reference-darwin.md"
     '';
 
   };
