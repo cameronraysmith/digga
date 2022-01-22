@@ -20,6 +20,7 @@
       channels.nixos = { };
 
       nixos = ./nixos;
+      darwin = ./darwin;
       home = ./home;
       devshell = ./devshell;
 
