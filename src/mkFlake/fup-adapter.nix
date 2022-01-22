@@ -96,14 +96,14 @@ let
     };
 
     outputsBuilder = channels:
-      flake-utils-plus.lib.mergeAny (defaultOutputsBuilder channels) (config.outputsBuilder channels);
-
+      flake-utils-plus.lib.mergeAny
+        (defaultOutputsBuilder channels)
+        (config.outputsBuilder channels);
   };
 
 in
-flake-utils-plus.lib.mkFlake
-  (
-    flake-utils-plus.lib.mergeAny
-      diggaFupArgs
-      extraArgs # for overlays list order
-  )
+flake-utils-plus.lib.mkFlake (
+  flake-utils-plus.lib.mergeAny
+    diggaFupArgs
+    extraArgs # for overlays list order
+)
