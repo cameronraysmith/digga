@@ -10,7 +10,12 @@ on:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # TODO: re-enable fail-fast when darwin support is ready
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
     - uses: actions/checkout@v2.4.0
       with:
