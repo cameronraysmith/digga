@@ -18,6 +18,10 @@
       home-manager.url = "github:nix-community/home-manager/release-21.11";
       home-manager.inputs.nixpkgs.follows = "nixlib";
 
+      # for its `darwin.lib.darwinSystem` builder
+      darwin.url = "github:LnL7/nix-darwin";
+      darwin.inputs.nixpkgs.follows = "latest";
+
       devshell.url = "github:numtide/devshell";
       flake-utils-plus.url = "github:gytis-ivaskevicius/flake-utils-plus";
 
@@ -34,6 +38,7 @@
     , devshell
     , flake-utils-plus
     , nixos-generators
+    , darwin
     , home-manager
     , ...
     }@inputs:
@@ -60,7 +65,7 @@
           mkFlake' = import ./src/mkFlake {
             inherit (nixlib) lib;
             inherit (flake-utils-plus.inputs) flake-utils;
-            inherit deploy devshell home-manager flake-utils-plus internal-modules tests;
+            inherit darwin deploy devshell home-manager flake-utils-plus internal-modules tests;
           };
         in
         {
