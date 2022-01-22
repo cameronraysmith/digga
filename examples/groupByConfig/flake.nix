@@ -5,7 +5,7 @@
     {
       nixos.url = "github:nixos/nixpkgs/release-21.11";
       digga = {
-        url = "github:divnix/digga";
+        url = "github:montchr/digga?ref=feature/darwin-hosts-support";
         inputs.nixpkgs.follows = "nixos";
       };
       home.url = "github:nix-community/home-manager";

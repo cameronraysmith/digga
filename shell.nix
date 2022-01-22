@@ -100,10 +100,13 @@ devshell.mkShell {
   env = [
     {
       name = "NIX_CONFIG";
-      value =
-        ''extra-experimental-features = nix-command flakes
-        extra-substituters = https://nrdxp.cachix.org https://nix-community.cachix.org
-        extra-trusted-public-keys = nrdxp.cachix.org-1:Fc5PSqY2Jm1TrWfm88l6cvGWwz3s93c6IOifQWnhNW4= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs='';
+      value = ''
+        extra-experimental-features = nix-command flakes
+        extra-substituters = https://dotfield.cachix.org https://nrdxp.cachix.org https://nix-community.cachix.org
+        extra-trusted-public-keys = dotfield.cachix.org-1:b5H/ucY/9PDARWG9uWA87ZKWUBU+hnfF30amwiXiaNk= nrdxp.cachix.org-1:Fc5PSqY2Jm1TrWfm88l6cvGWwz3s93c6IOifQWnhNW4= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+        # extra-substituters = https://nrdxp.cachix.org https://nix-community.cachix.org
+        # extra-trusted-public-keys = nrdxp.cachix.org-1:Fc5PSqY2Jm1TrWfm88l6cvGWwz3s93c6IOifQWnhNW4= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+      '';
     }
   ];
 
