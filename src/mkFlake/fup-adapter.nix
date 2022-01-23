@@ -58,13 +58,54 @@ let
     "tests"
   ];
 
+  nixosHostDefaults = flake-utils-plus.lib.mergeAny
+    {
+      system = "x86_64-linux";
+      output = "nixosConfigurations";
+
+      # add `self` & `inputs` as specialargs so their libs can be used in imports
+      specialArgs = config.nixos.importables // { inherit (config) self inputs; };
+      modules = config.nixos.hostDefaults.exportedModules ++ defaultHostModules;
+    }
+    config.nixos.hostDefaults;
+  nixosHosts = lib.mapAttrs
+    (hostName: hostConfig: {
+      ${hostName} = flake-utils-plus.lib.mergeAny
+        nixosHostDefaults
+        hostConfig;
+    })
+    config.nixos.hosts;
+
+  darwinHostDefaults = flake-utils-plus.lib.mergeAny
+    {
+      system = "x86_64-darwin";
+      output = "darwinConfigurations";
+      builder = darwin.lib.darwinSystem;
+
+      # add `self` & `inputs` as specialargs so their libs can be used in imports
+      specialArgs = config.darwin.importables // { inherit (config) self inputs; };
+      modules = config.darwin.hostDefaults.exportedModules ++ defaultHostModules;
+    }
+    config.darwin.hostDefaults;
+  darwinHosts = lib.mapAttrs
+    (hostName: hostConfig: {
+      ${hostName} = flake-utils-plus.lib.mergeAny
+        darwinHostDefaults
+        hostConfig;
+    })
+    config.darwin.hosts;
+
   diggaFupArgs = {
     inherit (config)
       channelsConfig
       supportedSystems;
     inherit self inputs sharedOverlays;
 
-    hosts = builtins.mapAttrs (_: stripHost) config.nixos.hosts;
+    hosts = builtins.mapAttrs (_: stripHost) (
+      flake-utils-plus.lib.mergeAny
+        nixosHosts
+        darwinHosts
+    );
 
     channels = builtins.mapAttrs
       (name: channel:
@@ -75,13 +116,9 @@ let
       )
       config.channels;
 
-    hostDefaults = flake-utils-plus.lib.mergeAny (stripHost config.nixos.hostDefaults) {
-      # add `self` & `inputs` as specialargs so their libs can be used in imports
-      specialArgs = config.nixos.importables // { inherit self inputs; };
-      modules = config.nixos.hostDefaults.exportedModules ++ defaultHostModules;
-    };
-
     nixosModules = flake-utils-plus.lib.exportModules config.nixos.hostDefaults.exportedModules;
+
+    darwinModules = flake-utils-plus.lib.exportModules config.darwin.hostDefaults.exportedModules;
 
     homeModules = flake-utils-plus.lib.exportModules config.home.exportedModules;
 
