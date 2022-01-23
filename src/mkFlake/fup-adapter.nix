@@ -69,13 +69,12 @@ let
     }
     config.nixos.hostDefaults;
   nixosHosts = lib.mapAttrs
-    (hostName: hostConfig: {
-      ${hostName} = (
+    (
+      _: hostConfig:
         flake-utils-plus.lib.mergeAny
           nixosHostDefaults
           hostConfig
-      );
-    })
+    )
     config.nixos.hosts;
 
   darwinHostDefaults = flake-utils-plus.lib.mergeAny
@@ -90,13 +89,11 @@ let
     }
     config.darwin.hostDefaults;
   darwinHosts = lib.mapAttrs
-    (hostName: hostConfig: {
-      ${hostName} = (
-        flake-utils-plus.lib.mergeAny
-          darwinHostDefaults
-          hostConfig
-      );
-    })
+    (
+      _: hostConfig: flake-utils-plus.lib.mergeAny
+        darwinHostDefaults
+        hostConfig
+    )
     config.darwin.hosts;
 
   diggaFupArgs = {
