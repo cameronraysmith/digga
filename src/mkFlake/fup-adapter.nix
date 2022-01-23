@@ -48,10 +48,12 @@ let
     # arguments in our channels api that shouldn't be passed to fup
     "overlays"
   ];
-
+  
   # evalArgs sets channelName and system to null by default
   # but for proper default handling in fup, null args have to be removed
-  stripHost = args: removeAttrs (lib.filterAttrs (_: arg: arg != null) args) [
+  stripNull = args: (lib.filterAttrs (_: arg: arg != null) args);
+    
+  stripHost = args: removeAttrs (stripNull args) [
     # arguments in our hosts/hostDefaults api that shouldn't be passed to fup
     "externalModules" # TODO: remove deprecated option
     "exportedModules"
@@ -67,13 +69,13 @@ let
       specialArgs = config.nixos.importables // { inherit (config) self inputs; };
       modules = config.nixos.hostDefaults.exportedModules ++ defaultHostModules;
     }
-    config.nixos.hostDefaults;
+    (stripNull config.nixos.hostDefaults);
   nixosHosts = lib.mapAttrs
     (
       _: hostConfig:
         flake-utils-plus.lib.mergeAny
           nixosHostDefaults
-          hostConfig
+          (stripNull hostConfig)
     )
     config.nixos.hosts;
 
@@ -87,12 +89,12 @@ let
       specialArgs = config.darwin.importables // { inherit (config) self inputs; };
       modules = config.darwin.hostDefaults.exportedModules ++ defaultHostModules;
     }
-    config.darwin.hostDefaults;
+    (stripNull config.darwin.hostDefaults);
   darwinHosts = lib.mapAttrs
     (
       _: hostConfig: flake-utils-plus.lib.mergeAny
         darwinHostDefaults
-        hostConfig
+        (stripNull hostConfig)
     )
     config.darwin.hosts;
 
