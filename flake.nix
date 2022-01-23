@@ -19,7 +19,8 @@
       home-manager.inputs.nixpkgs.follows = "nixlib";
 
       # for its `darwin.lib.darwinSystem` builder
-      darwin.url = "github:LnL7/nix-darwin";
+      # TODO: update url once https://github.com/LnL7/nix-darwin/pull/429 is merged
+      darwin.url = "github:montchr/nix-darwin/add-toplevel-option-lib";
       darwin.inputs.nixpkgs.follows = "latest";
 
       devshell.url = "github:numtide/devshell";
