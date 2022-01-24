@@ -48,11 +48,11 @@ let
     # arguments in our channels api that shouldn't be passed to fup
     "overlays"
   ];
-  
+
   # evalArgs sets channelName and system to null by default
   # but for proper default handling in fup, null args have to be removed
   stripNull = args: (lib.filterAttrs (_: arg: arg != null) args);
-    
+
   stripHost = args: removeAttrs (stripNull args) [
     # arguments in our hosts/hostDefaults api that shouldn't be passed to fup
     "externalModules" # TODO: remove deprecated option
@@ -65,9 +65,16 @@ let
       system = "x86_64-linux";
       output = "nixosConfigurations";
 
-      # add `self` & `inputs` as specialargs so their libs can be used in imports
+      # add `self` & `inputs` as specialArgs so their libs can be used in imports
       specialArgs = config.nixos.importables // { inherit (config) self inputs; };
-      modules = config.nixos.hostDefaults.exportedModules ++ defaultHostModules;
+
+      modules = config.nixos.hostDefaults.exportedModules ++ defaultHostModules ++ [
+        ({ config, pkgs, self, ... }: {
+          users.mutableUsers = lib.mkDefault false;
+          hardware.enableRedistributableFirmware = lib.mkDefault true;
+          system.configurationRevision = lib.mkIf (self ? rev) self.rev;
+        })
+      ];
     }
     (stripNull config.nixos.hostDefaults);
   nixosHosts = lib.mapAttrs
@@ -85,7 +92,7 @@ let
       output = "darwinConfigurations";
       builder = darwin.lib.darwinSystem;
 
-      # add `self` & `inputs` as specialargs so their libs can be used in imports
+      # add `self` & `inputs` as specialArgs so their libs can be used in imports
       specialArgs = config.darwin.importables // { inherit (config) self inputs; };
       modules = config.darwin.hostDefaults.exportedModules ++ defaultHostModules;
     }
