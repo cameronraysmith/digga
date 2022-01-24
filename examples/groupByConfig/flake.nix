@@ -3,11 +3,14 @@
 
   inputs =
     {
-      nixos.url = "github:nixos/nixpkgs/release-21.11";
+      nixos.url = "github:NixOS/nixpkgs/release-21.11";
+      nixpkgs-darwin-stable.url = "github:NixOS/nixpkgs/nixpkgs-21.11-darwin";
+
       digga = {
         url = "github:montchr/digga?ref=feature/darwin-hosts-support";
         inputs.nixpkgs.follows = "nixos";
       };
+
       home.url = "github:nix-community/home-manager";
       home.inputs.nixpkgs.follows = "nixos";
     };
@@ -17,7 +20,10 @@
 
       inherit self inputs;
 
-      channels.nixos = { };
+      channels = {
+        nixos = { };
+        nixpkgs-darwin-stable = { };
+      };
 
       nixos = ./nixos;
       darwin = ./darwin;
