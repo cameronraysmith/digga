@@ -15,7 +15,7 @@
       home.inputs.nixpkgs.follows = "nixos";
     };
 
-  outputs = inputs @ { self, nixos, digga, home }:
+  outputs = inputs @ { self, nixos, nixpkgs-darwin-stable, digga, home }:
     digga.lib.mkFlake {
 
       inherit self inputs;
